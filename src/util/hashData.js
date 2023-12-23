@@ -6,7 +6,7 @@ const hashData = async (data, saltRounds = 10) => {
         return hashedData;
 
     } catch (error){
-        throw error;
+        res.status(400).send(error.message);
     }
 };
 
@@ -16,7 +16,7 @@ const verifyHashedData = async (unhashed, hashed) => {
         return match;
 
     } catch (error) {
-        throw error;
+        res.status(400).send(error.message);
 
     }
 };
