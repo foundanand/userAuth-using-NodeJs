@@ -14,6 +14,10 @@ const authenticateUser = async (data) => {
             throw Error("Invalid email entered!");
         }
 
+        if (!fetchedUser.verified){
+            throw Error('Please verify your email!');
+        }
+
         const hashedPassword = fetchedUser.userPassword;
         const passwordMatch = await verifyHashedData(userPassword, hashedPassword)
 

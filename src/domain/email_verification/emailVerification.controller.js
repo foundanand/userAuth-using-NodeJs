@@ -1,4 +1,3 @@
-
 const User = require("./../user/user.model");
 const { sendOTP, verifyOTP, deleteOTP } = require("./../otp/otp.controller");
 
@@ -20,6 +19,10 @@ const verifyUserEmail = async ({userEmail, otp}) => {
         if (!validOTP) {
             throw Error('Invalid OTP');
         }
+
+        // Update user record to show verified
+        await User.updateOne({ userEmail}, { verified: true });
+        
 
         // Delete if OTP verifited
         await deleteOTP(userEmail);

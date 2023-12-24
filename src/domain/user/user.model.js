@@ -29,6 +29,10 @@ const userSchema = new Schema({
     token: {
         type: String,
     },
+    verified: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const User = db.model('User', userSchema);

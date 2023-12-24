@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { createNewUser, authenticateUser } = require('./user.controller');
 const auth = require('./../../middleware/auth');
+const { sendVerificationOTPEmail } = require("./../email_verification/emailVerification.controller");
 
 //protected route
 router.get("/private_data", auth, (req, res) => {
@@ -85,8 +86,8 @@ router.post('/signup', async (req, res) => {
         userGender: trimmedUserGender,
         userPassword: trimmedUserPassword,
     });
-    
 
+    await sendVerificationOTPEmail(userEmail);
     res.status(200).json({ message: 'Signup successful', user: newUser });
   } catch (error) {
     console.error('Error in signup:', error);
