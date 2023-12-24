@@ -8,8 +8,9 @@ const OTPSchema = new Schema({
         type: String,
         unique: true,
     },
-    opt : String,
+    otp : String,
     createdAt: Date,
+    expiresAt: Date,
 });
 
 const OTP = db.model("OTP", OTPSchema);

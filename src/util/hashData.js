@@ -6,7 +6,7 @@ const hashData = async (data, saltRounds = 10) => {
         return hashedData;
 
     } catch (error){
-        res.status(400).send(error.message);
+        throw error;
     }
 };
 
@@ -14,11 +14,12 @@ const verifyHashedData = async (unhashed, hashed) => {
     try {
         const match = await bcrypt.compare(unhashed, hashed);
         return match;
-
     } catch (error) {
-        res.status(400).send(error.message);
-
+        console.log("Error in verifyHashedData:", error.message);
+        throw error;
     }
 };
 
+
 module.exports = { hashData, verifyHashedData };
+

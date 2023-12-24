@@ -9,7 +9,6 @@ router.get("/private_data", auth, (req, res) => {
     .status(200)
     .send(`You are logged in using ${req.currentUser.userEmail}`);
 
-
 });
 
 

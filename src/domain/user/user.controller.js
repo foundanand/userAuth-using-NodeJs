@@ -28,6 +28,11 @@ const authenticateUser = async (data) => {
 
         // Assign user token
         fetchedUser.token = token;
+
+        // For dev purpose only, remove in production and testing
+        console.log(fetchedUser);
+
+
         return fetchedUser;
 
     }catch (error) {
