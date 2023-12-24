@@ -5,6 +5,6 @@ const emailVerificationController = require('./../controller/emailVerification.c
 // verify Email
 router.post('/verifyEmail', emailVerificationController.verifyEmail);
 // Send verification Email
-router.post('/sendVerificationMail', emailVerificationController.sendVerificationOTPEmail);
+router.post('/sendVerificationMail', emailVerificationController.sendOTPEmail);
 
 module.exports = router;

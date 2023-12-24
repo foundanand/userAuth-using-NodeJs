@@ -51,7 +51,7 @@ exports.sendVerificationOTPEmail = async (userEmail) => {
 };
 
 
-exports.sendVerificationOTPEmail = async (req, res) => {
+exports.sendOTPEmail = async (req, res) => {
     try{ 
         const { userEmail } = req.body;
         //Check if recieved userEmail field
@@ -62,7 +62,7 @@ exports.sendVerificationOTPEmail = async (req, res) => {
         res.status(200).json({ message: "OTP Sent",  createdEmailVerificationOTP} );
     } catch (error) {
         console.log("Error in emailVerification Routes 1");
-        res.status(400).send(error.message);
+        res.status(400).send(error.message); 
 
     }
 };
@@ -74,7 +74,7 @@ exports.verifyEmail = async (req, res) => {
         if (!(userEmail && otp)) throw Error("Please give all the details");
 
         await verifyUserEmail({ userEmail, otp })
-        res.status(200).json({ userEmail, verified: true });
+        res.status(200).json({ userEmail, isVerified: true });
 
     } catch (error) {
         console.log("Error in emailVerificationRoutes");
