@@ -5,50 +5,47 @@ const { hashData, verifyHashedData } = require('./../../util/hashData');
 const { AUTH_EMAIL } = process.env;
 
 
-// const verifyOTP = async () => {
-//     try{ 
-
-//     } catch (error) {
-
-//     }
-// };
-
-
 // verify OTP
-const verifyOTP = async ({userEmail, otp}) => {
-    try{ 
-        if (!(userEmail && otp)){
+const verifyOTP = async ({ userEmail, otp }) => {
+    try {
+        console.log("Verifying OTP for", userEmail);
+
+        if (!(userEmail && otp)) {
             throw Error("Provide values for email and otp");
-    
         }
 
-        // ensure OTP exist
+        // Ensure OTP exists in the database
         const matchedOTPRecord = await OTP.findOne({
             userEmail,
         });
-        if(!matchedOTPRecord){
+
+        if (!matchedOTPRecord) {
             throw Error(`No OTP found for this ${userEmail}`);
         }
 
-        // Checking for expired code
+        // Retrieve hashed OTP from the database
         const { expiresAt, otp: hashedOTP } = matchedOTPRecord;
+        console.log("Hashed OTP from the database:", hashedOTP);
 
-        if (expiresAt < Date.now()){
+        // Checking for expired code
+        if (expiresAt < Date.now()) {
+            // Delete expired OTP from the database
             await OTP.deleteOne({ userEmail });
             throw Error('Code has expired. Request for a new one.');
         }
 
-        // If not expired and does exist
-    
+        // If not expired and does exist, verify the provided OTP
         const validOTP = await verifyHashedData(otp, hashedOTP);
+        console.log("OTP Verification Result:", validOTP);
+
         return validOTP;
-
     } catch (error) {
-        console.log("Located: OTP Contoller 1")
+        console.error("Error in OTP Controller 1:", error.message);
         throw error;
-
     }
 };
+
+
 
 
 

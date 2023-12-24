@@ -8,9 +8,41 @@
 
 
 const User = require('./../user/user.model');
-const { sendOTP } = require('./../otp/otp.controller');
+const { sendOTP, verifyOTP, deleteOTP } = require('./../otp/otp.controller');
+const { hashData } = require('./../../util/hashData');
 
 
+// reset password
+const resetUserPassword = async ({userEmail, otp, newPassword}) => {
+    try {
+        console.log("Verifying OTP...");
+        const validOTP = await verifyOTP({ userEmail, otp });
+        console.log("OTP Verification Result:", validOTP);
+
+        if (!validOTP) {
+            throw Error("Invalid code passed. Check your inbox.");
+        }
+
+        console.log("Updating user password...");
+        const hashedNewPassword = await hashData(newPassword);
+        await User.updateOne({ userEmail }, { userPassword: hashedNewPassword });
+        console.log("Password updated successfully.");
+
+        console.log("Deleting OTP...");
+        await deleteOTP(userEmail);
+        console.log("OTP deleted.");
+
+        return;
+    } catch (error) {
+        console.log("ERROR: fp.Controller - resetUserPassword");
+        throw error;
+    }
+};
+
+
+
+
+// send password reset mail
 const sendPasswordResetOTPEmail = async ( userEmail ) => {
     try{ 
 
@@ -43,4 +75,4 @@ const sendPasswordResetOTPEmail = async ( userEmail ) => {
 };
 
 
-module.exports = { sendPasswordResetOTPEmail };
+module.exports = { sendPasswordResetOTPEmail, resetUserPassword };
