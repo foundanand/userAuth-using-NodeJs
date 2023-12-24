@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const userRoutes = require('./../domain/user');
-const OTPRoutes = require('./../domain/otp');
-const EmailVerificationRoutes = require("./../domain/email_verification");
-const ForgotPasswordRoutes = require('./../domain/forgot_password');
+const userRoutes = require('../domain/user');
+const OTPRoutes = require('../domain/otp');
+const EmailVerificationRoutes = require("../domain/email_verification");
+const ForgotPasswordRoutes = require('../domain/forgot_password');
 
 
 

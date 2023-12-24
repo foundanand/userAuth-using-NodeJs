@@ -1,12 +1,12 @@
-const OTP = require('./otp.model');
-const generateOTP = require('../../util/generateOTP');
-const sendEmail = require('./../../util/sendEmail');
-const { hashData, verifyHashedData } = require('./../../util/hashData');
+const OTP = require('../model/otp.model');
+const {generateOTP} = require('../util/generateOTP');
+const {sendEmail} = require('../util/sendEmail');
+const { hashData, verifyHashedData } = require('../util/hashData');
 const { AUTH_EMAIL } = process.env;
 
 
 // verify OTP
-const verifyOTP = async ({ userEmail, otp }) => {
+exports.verifyOTP = async ({ userEmail, otp }) => {
     try {
         console.log("Verifying OTP for", userEmail);
 
@@ -46,12 +46,7 @@ const verifyOTP = async ({ userEmail, otp }) => {
 };
 
 
-
-
-
-
-
-const sendOTP = async ({ userEmail, otpSubject, otpMessage, otpDuration = 1 }) => {
+exports.sendOTP = async ({ userEmail, otpSubject, otpMessage, otpDuration = 1 }) => {
     try {
         if (!(userEmail && otpSubject && otpMessage)) {
             throw Error("Provide values for email, subject, message");
@@ -89,7 +84,7 @@ const sendOTP = async ({ userEmail, otpSubject, otpMessage, otpDuration = 1 }) =
     }
 }
 
-const deleteOTP = async (userEmail) => {
+exports.deleteOTP = async (userEmail) => {
     try {
         await OTP.deleteOne({ userEmail });
     } catch (error) {
@@ -99,4 +94,39 @@ const deleteOTP = async (userEmail) => {
 };
 
 
-module.exports = { sendOTP, verifyOTP, deleteOTP };
+
+exports.verify = async (req, res) => {
+    try {
+        let { userEmail, otp } = req.body;
+
+        const isValidOTP = await verifyOTP({ userEmail, otp });
+        res.status(200).json({ valid: isValidOTP });
+
+    } catch (error) {
+        console.error("Error in OTP verification:", error);
+        res.status(400).send(error.message);
+    }
+};
+
+
+exports.send = async (req, res) => {
+    try{
+        const { userEmail, otpSubject, otpMessage, otpDuration } = req.body;
+
+        const createdOTP = await sendOTP({
+            userEmail,
+            otpSubject,
+            otpMessage,
+            otpDuration,
+
+        });
+        res.status(200).json({message: 'OTP Sent' , createdOTP});
+    } catch (error) {
+        console.log("Located: OTP Routes");
+        res.status(400).send(error.message);
+
+    } 
+};
+
+
+// module.exports = { sendOTP, verifyOTP, deleteOTP };

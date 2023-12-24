@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const db = require('./../../config/db');
+const db = require('./../config/db');
 
 const { Schema } = mongoose;
 
@@ -29,7 +29,16 @@ const userSchema = new Schema({
     token: {
         type: String,
     },
-    verified: {
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
+
+    isClubAdmin: {
         type: Boolean,
         default: false,
     },

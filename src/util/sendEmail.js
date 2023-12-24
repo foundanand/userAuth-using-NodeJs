@@ -13,9 +13,7 @@ let transporter = nodemailer.createTransport({
 
 });
 
-
 // test transporter 
-
 transporter.verify((error, success) => {
     if (error){
         console.log(error);
@@ -25,8 +23,8 @@ transporter.verify((error, success) => {
     }
 });
 
-
-const sendEmail = async (mailOptions) => {
+//Send Emails
+exports.sendEmail = async (mailOptions) => {
     try { 
         await transporter.sendMail(mailOptions);
         return;
@@ -36,4 +34,4 @@ const sendEmail = async (mailOptions) => {
     }
 };
 
-module.exports = sendEmail;
+// module.exports = sendEmail;
