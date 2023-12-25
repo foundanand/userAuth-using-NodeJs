@@ -42,6 +42,17 @@ const userSchema = new Schema({
         type: Boolean,
         default: false,
     },
+
+    userBatch: {
+        type: String,
+    },
+    userBirthDate: {
+        type: String,
+    },
+    userContactNum: {
+        type: String,
+    },
+    
 });
 
 const User = db.model('User', userSchema);

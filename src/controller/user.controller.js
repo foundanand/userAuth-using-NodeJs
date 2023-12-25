@@ -43,7 +43,7 @@ const authenticateUser = async (data) => {
 // Create User
 const createNewUser = async (data) => {
     try {
-        const { userName, userRegID, userEmail, userGender, userPassword } = data;
+        const { userName, userRegID, userEmail, userGender, userPassword, userBatch, userBirthDate, userContactNum } = data;
 
         const existingUser = await User.findOne({ email: userEmail });
 
@@ -59,6 +59,9 @@ const createNewUser = async (data) => {
             userEmail,
             userGender,
             userPassword: hashedPassword,
+            userBatch,
+            userBirthDate,
+            userContactNum,
         });
         
         const createdUser = await newUser.save();
@@ -95,11 +98,11 @@ exports.signIn = async (req, res) => {
 // Sign Up
 exports.signUp = async (req, res) => {
     try {
-      const { userName, userRegID, userEmail, userGender, userPassword } = req.body;
+      const { userName, userRegID, userEmail, userGender, userPassword, userBatch, userBirthDate, userContactNum } = req.body;
   
       console.log('Received data:', req.body);
       
-      console.log('Variables before trimming:', { userName, userRegID, userEmail, userGender, userPassword });
+      console.log('Variables before trimming:', { userName, userRegID, userEmail, userGender, userPassword, userBatch, userBirthDate, userContactNum });
   
       // Ensure all variables are defined before using trim()
       const trimmedUserName = userName ? userName.trim() : '';
@@ -107,11 +110,14 @@ exports.signUp = async (req, res) => {
       const trimmedUserEmail = userEmail ? userEmail.trim() : '';
       const trimmedUserGender = userGender ? userGender.trim() : '';
       const trimmedUserPassword = userPassword ? userPassword.trim() : '';
+      const trimmedUserBatch = userBatch ? userBatch.trim() : '';
+      const trimmedUserBirthDate = userBirthDate ? userBirthDate.trim() : '';
+      const trimmedUserContact = userContactNum ? userContactNum.trim() : '';
   
       const validationErrors = [];
   
       // Check for empty input fields
-      if (!trimmedUserName || !trimmedUserEmail || !trimmedUserRegID || !trimmedUserGender || !trimmedUserPassword) {
+      if (!trimmedUserName || !trimmedUserEmail || !trimmedUserRegID || !trimmedUserGender || !trimmedUserPassword ) {
         validationErrors.push('Empty input fields!');
       }
   
@@ -129,6 +135,18 @@ exports.signUp = async (req, res) => {
       if (!trimmedUserPassword || trimmedUserPassword.length < 8) {
         validationErrors.push('Password is too short!');
       }
+
+      if (trimmedUserBatch && !/^\d{4}$/.test(trimmedUserBatch)) {
+        validationErrors.push('Invalid user batch! It must be a 4-digit number.');
+      }
+
+      if (trimmedUserBirthDate && !/^\d{4}-\d{2}-\d{2}$/.test(trimmedUserBirthDate)) {
+        validationErrors.push('Invalid user birth date format!');
+      }
+
+      if (trimmedUserContact && !/^[0-9]{10}$/.test(trimmedUserContact)) {
+        validationErrors.push('Invalid user contact number format!');
+      }
   
       // If there are validation errors, send them in the response
       if (validationErrors.length > 0) {
@@ -143,11 +161,14 @@ exports.signUp = async (req, res) => {
           userEmail: trimmedUserEmail,
           userGender: trimmedUserGender,
           userPassword: trimmedUserPassword,
+          userBatch: trimmedUserBatch,
+          userBirthDate: trimmedUserBirthDate,
+          userContactNum: trimmedUserContact,
       });
   
       await sendVerificationOTPEmail(userEmail);
       res.status(200).json({ message: 'Signup successful', user: newUser });
-      console.log("Verification Email Send | Line 150")
+      console.log("Verification Email Sent | Line 150")
     } catch (error) {
       console.error('Error in signup:', error);
   
