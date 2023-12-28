@@ -8,3 +8,5 @@ router.post('/verifyEmail', emailVerificationController.verifyEmail);
 router.post('/sendVerificationMail', emailVerificationController.sendOTPEmail);
 
 module.exports = router;
+
+// Verify Email First
