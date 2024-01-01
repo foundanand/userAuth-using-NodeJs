@@ -2,15 +2,14 @@ const nodemailer = require("nodemailer");
 const { AUTH_EMAIL, AUTH_PASS, SMTP_SERVER } = process.env
 
 let transporter = nodemailer.createTransport({
+    name: "www.vitkart.in",
     host: SMTP_SERVER,
     port: 465,
     secure: true,
     auth: {
         user: AUTH_EMAIL,
         pass: AUTH_PASS,
-
     }
-
 });
 
 // test transporter 
